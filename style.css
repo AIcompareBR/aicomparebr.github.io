@@ -70,6 +70,26 @@ nav {
     width: 100%;
 }
 
+.theme-toggle {
+    background: rgba(45, 52, 54, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.5rem;
+}
+
+.theme-toggle:hover {
+    background: rgba(45, 52, 54, 0.2);
+    border-color: #2d3436;
+    transform: scale(1.05);
+}
+
+.theme-icon {
+    display: block;
+}
+
 main {
     max-width: 1400px;
     margin: 0 auto;
@@ -632,6 +652,311 @@ footer {
 
 .ai-result a:hover {
     color: #1e272e;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    color: #e0e0e0;
+    background: #1a1a2e;
+}
+
+body.dark-mode header {
+    background: rgba(26, 26, 46, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .logo {
+    color: #e0e0e0;
+}
+
+body.dark-mode .nav-links a {
+    color: #a0a0a0;
+}
+
+body.dark-mode .nav-links a:hover {
+    color: #e0e0e0;
+}
+
+body.dark-mode .nav-links a::after {
+    background: #e0e0e0;
+}
+
+body.dark-mode .theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .hero {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .hero h1 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .hero p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .search-box input {
+    background: rgba(26, 26, 46, 0.8);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .search-box input:focus {
+    background: rgba(26, 26, 46, 1);
+    border-color: #7aa2f7;
+}
+
+body.dark-mode .search-box input::placeholder {
+    color: #666;
+}
+
+body.dark-mode .search-box button {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .search-box button:hover {
+    background: #6a92e7;
+}
+
+body.dark-mode .spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: #7aa2f7;
+}
+
+body.dark-mode .results {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .results h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .categories h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .category-card {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .category-card:hover {
+    background: rgba(26, 26, 46, 1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .category-card h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .category-card p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .compare-section {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .compare-section h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .compare-form input {
+    background: rgba(26, 26, 46, 0.8);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .compare-form input:focus {
+    background: rgba(26, 26, 46, 1);
+    border-color: #7aa2f7;
+}
+
+body.dark-mode .compare-form input::placeholder {
+    color: #666;
+}
+
+body.dark-mode .compare-form span {
+    color: #e0e0e0;
+}
+
+body.dark-mode .compare-form button {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .compare-form button:hover {
+    background: #6a92e7;
+}
+
+body.dark-mode .about {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .about h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .about p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .feature {
+    background: rgba(26, 26, 46, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .feature h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .feature p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .pricing {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .pricing h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .pricing > p {
+    color: #a0a0a0;
+}
+
+body.dark-mode .pricing-card {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .pricing-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .pricing-card.popular {
+    border-color: #7aa2f7;
+    background: rgba(122, 162, 247, 0.1);
+}
+
+body.dark-mode .popular-badge {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .plan-name {
+    color: #e0e0e0;
+}
+
+body.dark-mode .plan-price {
+    color: #7aa2f7;
+}
+
+body.dark-mode .plan-period {
+    color: #a0a0a0;
+}
+
+body.dark-mode .plan-features li {
+    color: #e0e0e0;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .plan-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .plan-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .plan-btn.primary {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .plan-btn.primary:hover {
+    background: #6a92e7;
+}
+
+body.dark-mode footer {
+    color: #a0a0a0;
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .modal-content {
+    background: rgba(26, 26, 46, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .close:hover {
+    color: #7aa2f7;
+}
+
+body.dark-mode .comparison-table th,
+body.dark-mode .comparison-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .comparison-table th {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .comparison-table tr:hover {
+    background: rgba(122, 162, 247, 0.1);
+}
+
+body.dark-mode .ai-result {
+    background: rgba(26, 26, 46, 0.8);
+    border-left-color: #7aa2f7;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .ai-result h3 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .ai-result p {
+    color: #e0e0e0;
+}
+
+body.dark-mode .ai-result strong {
+    color: #7aa2f7;
+}
+
+body.dark-mode .ai-result .specs {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .ai-result .specs strong {
+    color: #7aa2f7;
+}
+
+body.dark-mode .ai-result a {
+    color: #7aa2f7;
+}
+
+body.dark-mode .ai-result a:hover {
+    color: #6a92e7;
 }
 
 @media (max-width: 768px) {
