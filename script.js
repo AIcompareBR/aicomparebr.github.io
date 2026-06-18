@@ -1,3 +1,79 @@
+// Configuração da API DeepSeek
+const DEEPSEEK_API_KEY = 'SUA_API_KEY_AQUI'; // Substitua pela sua API key do DeepSeek
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+
+// Função para chamar a API do DeepSeek
+async function callDeepSeekAPI(query) {
+    if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
+        console.warn('API key do DeepSeek não configurada. Usando busca local.');
+        return null;
+    }
+
+    try {
+        const response = await fetch(DEEPSEEK_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    {
+                        role: 'system',
+                        content: `Você é um assistente de comparação de produtos. O usuário vai buscar por produtos e você deve retornar informações relevantes em formato JSON.
+                        
+                        Base de dados disponível:
+                        ${JSON.stringify(productDatabase, null, 2)}
+                        
+                        Se encontrar produtos correspondentes, retorne apenas o JSON com os produtos encontrados.
+                        Se não encontrar, retorne null.
+                        
+                        Formato de resposta esperado:
+                        [
+                            {
+                                "name": "Nome do produto",
+                                "category": "categoria",
+                                "price": "Preço",
+                                "rating": 4.5,
+                                "specs": {...},
+                                "pros": [...],
+                                "cons": [...],
+                                "bestFor": "Melhor para...",
+                                "link": "URL"
+                            }
+                        ]`
+                    },
+                    {
+                        role: 'user',
+                        content: `Busque por: ${query}`
+                    }
+                ],
+                temperature: 0.3,
+                max_tokens: 2000
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.choices && data.choices[0]) {
+            const content = data.choices[0].message.content;
+            try {
+                const parsed = JSON.parse(content);
+                return parsed;
+            } catch (e) {
+                console.error('Erro ao parsear resposta da IA:', e);
+                return null;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Erro ao chamar API do DeepSeek:', error);
+        return null;
+    }
+}
+
 // Dados de produtos para comparação
 const productDatabase = {
     carros: [
@@ -658,12 +734,12 @@ function openCheckout(plan) {
 
 // Limitar buscas para plano grátis
 let searchCount = 0;
-const MAX_FREE_SEARCHES = 5;
+const MAX_FREE_SEARCHES = 50;
 
 async function aiSearch() {
     // Verificar limite de buscas (simulação)
     if (searchCount >= MAX_FREE_SEARCHES) {
-        const upgrade = confirm('Você atingiu o limite de 5 buscas diárias no plano grátis.\n\nQuer fazer upgrade para o plano PRO e ter buscas ilimitadas?');
+        const upgrade = confirm('Você atingiu o limite de 50 buscas diárias no plano grátis.\n\nQuer fazer upgrade para o plano PRO e ter buscas ilimitadas?');
         if (upgrade) {
             document.getElementById('precos').scrollIntoView({ behavior: 'smooth' });
         }
@@ -682,52 +758,57 @@ async function aiSearch() {
     document.getElementById('loading').style.display = 'block';
     document.getElementById('resultados').style.display = 'none';
     
-    // Simular delay da IA
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Buscar nos dados - busca mais flexível
+    // Tentar usar API do DeepSeek primeiro
     let results = [];
-    const searchTerms = query.split(' ').filter(term => term.length > 2);
+    const aiResults = await callDeepSeekAPI(query);
     
-    for (const category in productDatabase) {
-        const products = productDatabase[category];
-        for (const product of products) {
-            let match = false;
-            
-            // Busca por nome exato ou parcial
-            if (product.name.toLowerCase().includes(query)) {
-                match = true;
-            }
-            
-            // Busca por categoria
-            if (category.toLowerCase().includes(query)) {
-                match = true;
-            }
-            
-            // Busca por especificações
-            for (const spec in product.specs) {
-                if (String(product.specs[spec]).toLowerCase().includes(query)) {
+    if (aiResults && Array.isArray(aiResults) && aiResults.length > 0) {
+        // Usar resultados da IA
+        results = aiResults;
+    } else {
+        // Fallback para busca local se API falhar ou não estiver configurada
+        const searchTerms = query.split(' ').filter(term => term.length > 2);
+        
+        for (const category in productDatabase) {
+            const products = productDatabase[category];
+            for (const product of products) {
+                let match = false;
+                
+                // Busca por nome exato ou parcial
+                if (product.name.toLowerCase().includes(query)) {
                     match = true;
                 }
-            }
-            
-            // Busca por prós/contras
-            if (product.pros.some(pro => pro.toLowerCase().includes(query))) {
-                match = true;
-            }
-            
-            // Busca por termos múltiplos
-            if (searchTerms.length > 0) {
-                const allTermsMatch = searchTerms.every(term => 
-                    product.name.toLowerCase().includes(term) ||
-                    category.toLowerCase().includes(term) ||
-                    Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
-                );
-                if (allTermsMatch) match = true;
-            }
-            
-            if (match) {
-                results.push({ ...product, category });
+                
+                // Busca por categoria
+                if (category.toLowerCase().includes(query)) {
+                    match = true;
+                }
+                
+                // Busca por especificações
+                for (const spec in product.specs) {
+                    if (String(product.specs[spec]).toLowerCase().includes(query)) {
+                        match = true;
+                    }
+                }
+                
+                // Busca por prós/contras
+                if (product.pros.some(pro => pro.toLowerCase().includes(query))) {
+                    match = true;
+                }
+                
+                // Busca por termos múltiplos
+                if (searchTerms.length > 0) {
+                    const allTermsMatch = searchTerms.every(term => 
+                        product.name.toLowerCase().includes(term) ||
+                        category.toLowerCase().includes(term) ||
+                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
+                    );
+                    if (allTermsMatch) match = true;
+                }
+                
+                if (match) {
+                    results.push({ ...product, category });
+                }
             }
         }
     }

@@ -53,7 +53,7 @@ Para ter a URL `https://ai-compare.github.io`, você tem 2 opções:
 3. A URL do seu repositório muda automaticamente
 4. **Problema**: Muda TODOS os seus repositórios
 
-## �🎯 O Que o Site Faz
+## � O Que o Site Faz
 
 ### Busca com IA
 - Digite qualquer produto (ex: "iPhone", "Civic", "MacBook")
@@ -66,7 +66,7 @@ Para ter a URL `https://ai-compare.github.io`, você tem 2 opções:
 - Indica o vencedor com 🏆
 
 ### Sistema de Assinatura PRO
-- **Grátis**: 5 buscas por dia, 8 categorias
+- **Grátis**: 50 buscas por dia, 8 categorias
 - **PRO (R$29/mês)**: Buscas ilimitadas, IA avançada, histórico
 - **Enterprise (R$99/mês)**: API access, multi-usuário, suporte dedicado
 
@@ -142,7 +142,7 @@ function openCheckout(plan) {
 - Stripe: ~2.9% + R$0,30 por transação
 - Hotmart: ~9.9% por venda
 
-## �📝 Como Adicionar Novos Produtos
+## �� Como Adicionar Novos Produtos
 
 Edite o arquivo `script.js` e adicione no objeto `productDatabase`:
 
