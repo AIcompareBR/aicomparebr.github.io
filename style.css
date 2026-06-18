@@ -90,6 +90,70 @@ nav {
     display: block;
 }
 
+.login-btn {
+    background: rgba(45, 52, 54, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+.login-btn:hover {
+    background: rgba(45, 52, 54, 0.2);
+    border-color: #2d3436;
+}
+
+.login-modal {
+    max-width: 450px;
+}
+
+.login-modal h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2d3436;
+}
+
+.login-input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2d3436;
+    transition: all 0.3s;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #2d3436;
+    background: rgba(255, 255, 255, 1);
+}
+
+.login-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #2d3436;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+}
+
+.login-submit:hover {
+    background: #1e272e;
+    transform: translateY(-2px);
+}
+
 main {
     max-width: 1400px;
     margin: 0 auto;
@@ -957,6 +1021,41 @@ body.dark-mode .ai-result a {
 
 body.dark-mode .ai-result a:hover {
     color: #6a92e7;
+}
+
+body.dark-mode .login-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+body.dark-mode .login-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .login-modal h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode .login-input {
+    background: rgba(26, 26, 46, 0.8);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .login-input:focus {
+    background: rgba(26, 26, 46, 1);
+    border-color: #7aa2f7;
+}
+
+body.dark-mode .login-submit {
+    background: #7aa2f7;
+    color: #1a1a2e;
+}
+
+body.dark-mode .login-submit:hover {
+    background: #6a92e7;
 }
 
 @media (max-width: 768px) {

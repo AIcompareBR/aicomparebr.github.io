@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIC - AI Compare</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <header>
@@ -16,6 +20,7 @@
                 <li><a href="#comparar">Comparar</a></li>
                 <li><a href="#precos">Preços</a></li>
                 <li><a href="#sobre">Sobre</a></li>
+                <li><button class="login-btn" onclick="openLoginModal()" id="loginBtn">Entrar</button></li>
             </ul>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">
                 <span class="theme-icon">🌙</span>
@@ -28,9 +33,12 @@
             <h1>Compare QUALQUER Coisa com IA</h1>
             <p>Carros, celulares, notebooks, câmeras e muito mais. Digite o que quer comparar e nossa IA faz o resto!</p>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Ex: iPhone 15 vs Samsung Galaxy S24, ou 'melhor carro até 50k'...">
+                <input type="text" id="searchInput" placeholder="Digite o que quer comparar...">
                 <button onclick="aiSearch()">🤖 Pesquisar com IA</button>
             </div>
+            <p style="margin-top: 1rem; color: #636e72; font-size: 0.9rem;">
+                💡 Tente: "celular bom e barato", "notebook gamer top", "carro de luxo chique"
+            </p>
             <div id="loading" class="loading" style="display: none;">
                 <div class="spinner"></div>
                 <p>IA pesquisando... isso pode levar alguns segundos</p>
@@ -180,6 +188,30 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-modal">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2>Entrar / Cadastrar</h2>
+            <div id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" class="login-input">
+                <input type="password" id="loginPassword" placeholder="Senha" class="login-input">
+                <button onclick="handleLogin()" class="login-submit">Entrar</button>
+                <p style="margin-top: 1rem;">Não tem conta? <a href="#" onclick="toggleAuthMode()" style="color: #7aa2f7;">Cadastrar</a></p>
+            </div>
+            <div id="registerForm" style="display: none;">
+                <input type="email" id="registerEmail" placeholder="Email" class="login-input">
+                <input type="password" id="registerPassword" placeholder="Senha" class="login-input">
+                <select id="registerPlan" class="login-input">
+                    <option value="free">Plano Free (50 buscas/dia)</option>
+                    <option value="pro">Plano Pro (Ilimitado)</option>
+                </select>
+                <button onclick="handleRegister()" class="login-submit">Cadastrar</button>
+                <p style="margin-top: 1rem;">Já tem conta? <a href="#" onclick="toggleAuthMode()" style="color: #7aa2f7;">Entrar</a></p>
+            </div>
+            <div id="authError" style="color: #ff6b6b; margin-top: 1rem; display: none;"></div>
         </div>
     </div>
 

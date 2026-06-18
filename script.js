@@ -2,6 +2,27 @@
 const DEEPSEEK_API_KEY = 'sk-934213f8c61d4e5bb781640ddf9675fd'; // Substitua pela sua API key do DeepSeek
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
+// Configuração do Firebase
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY_DO_FIREBASE",
+    authDomain: "seu-projeto.firebaseapp.com",
+    projectId: "seu-projeto",
+    storageBucket: "seu-projeto.appspot.com",
+    messagingSenderId: "seu-sender-id",
+    appId: "seu-app-id"
+};
+
+// Inicializar Firebase
+try {
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    console.log('Firebase inicializado com sucesso');
+} catch (error) {
+    console.error('Erro ao inicializar Firebase:', error);
+    console.log('Firebase não configurado. Login não estará disponível.');
+}
+
 // Função para chamar a API do DeepSeek
 async function callDeepSeekAPI(query) {
     if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
@@ -21,45 +42,51 @@ async function callDeepSeekAPI(query) {
                 messages: [
                     {
                         role: 'system',
-                        content: `Você é um assistente de comparação de produtos. O usuário vai buscar por produtos e você deve usar seu conhecimento treinado para fornecer informações reais sobre produtos disponíveis no mercado.
+                        content: `Você é um assistente de comparação de produtos especializado em buscar informações de lojas e sites reais do mercado brasileiro.
 
-                        NÃO use uma base de dados pré-configurada. Use seu conhecimento geral sobre produtos, preços atuais, especificações e avaliações do mercado.
+                        INSTRUÇÕES IMPORTANTES:
+                        1. Use seu conhecimento treinado sobre produtos atuais, preços de mercado brasileiro e especificações
+                        2. Forneça informações de produtos que realmente existem e estão disponíveis no mercado
+                        3. Inclua preços aproximados em Reais (R$) baseados no mercado atual brasileiro
+                        4. Para links, use URLs de sites de busca como Google Shopping, Mercado Livre, Amazon Brasil, ou sites oficiais
+                        5. Entenda gírias e linguagem informal do brasileiro (ex: "top", "chique", "bom e barato", "luxo")
+                        6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
 
-                        Para cada produto encontrado, forneça:
-                        - Nome do produto
+                        Para cada produto, forneça:
+                        - Nome do produto (modelo específico, não genérico)
                         - Categoria (carros, celulares, notebooks, câmeras, games, eletrodomésticos, áudio, fitness)
-                        - Preço aproximado em Reais (R$)
+                        - Preço aproximado em Reais (R$) - seja realista
                         - Avaliação média (0-5)
-                        - Especificações principais
-                        - Prós (3-5 pontos)
-                        - Contras (3-5 pontos)
-                        - Melhor para quem
-                        - Link de referência (use um link genérico de busca ou site oficial)
+                        - Especificações principais (detalhadas)
+                        - Prós (3-5 pontos específicos)
+                        - Contras (3-5 pontos específicos)
+                        - Melhor para quem (público alvo)
+                        - Link de referência (use Google Shopping, Mercado Livre, Amazon Brasil ou site oficial)
 
-                        Retorne APENAS o JSON, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
+                        Retorne APENAS o JSON válido, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
 
                         Formato de resposta esperado:
                         [
                             {
-                                "name": "Nome do produto",
+                                "name": "Nome específico do produto/modelo",
                                 "category": "categoria",
-                                "price": "Preço em R$",
+                                "price": "Preço em R$ (ex: R$ 2.500)",
                                 "rating": 4.5,
-                                "specs": {"especificação": "valor"},
-                                "pros": ["pró 1", "pró 2"],
-                                "cons": ["contra 1", "contra 2"],
-                                "bestFor": "Melhor para...",
-                                "link": "https://..."
+                                "specs": {"especificação": "valor específico"},
+                                "pros": ["pró específico 1", "pró específico 2"],
+                                "cons": ["contra específico 1", "contra específico 2"],
+                                "bestFor": "Público alvo específico",
+                                "link": "https://shopping.google.com/..."
                             }
                         ]`
                     },
                     {
                         role: 'user',
-                        content: `Busque informações sobre: ${query}. Forneça 3-5 produtos relevantes com detalhes completos.`
+                        content: `Busque informações reais sobre: "${query}". Forneça 3-5 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.`
                     }
                 ],
-                temperature: 0.7,
-                max_tokens: 3000
+                temperature: 0.8,
+                max_tokens: 3500
             })
         });
 
@@ -807,3 +834,157 @@ function loadTheme() {
 
 // Carregar tema quando a página carregar
 document.addEventListener('DOMContentLoaded', loadTheme);
+
+// Funções de Login/Registro
+let isLoginMode = true;
+
+function openLoginModal() {
+    document.getElementById('loginModal').style.display = 'block';
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('authError').style.display = 'none';
+}
+
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    document.getElementById('loginForm').style.display = isLoginMode ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = isLoginMode ? 'none' : 'block';
+    document.getElementById('authError').style.display = 'none';
+}
+
+function showAuthError(message) {
+    const errorDiv = document.getElementById('authError');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+}
+
+async function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+        showAuthError('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    try {
+        if (typeof firebase === 'undefined') {
+            showAuthError('Firebase não configurado. Configure o Firebase no script.js.');
+            return;
+        }
+
+        const auth = firebase.auth();
+        await auth.signInWithEmailAndPassword(email, password);
+        
+        closeLoginModal();
+        updateLoginButton();
+        alert('Login realizado com sucesso!');
+    } catch (error) {
+        showAuthError('Erro ao fazer login: ' + error.message);
+    }
+}
+
+async function handleRegister() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const plan = document.getElementById('registerPlan').value;
+
+    if (!email || !password) {
+        showAuthError('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    if (password.length < 6) {
+        showAuthError('A senha deve ter pelo menos 6 caracteres.');
+        return;
+    }
+
+    try {
+        if (typeof firebase === 'undefined') {
+            showAuthError('Firebase não configurado. Configure o Firebase no script.js.');
+            return;
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Criar usuário
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Salvar plano do usuário no Firestore
+        await db.collection('users').doc(user.uid).set({
+            email: email,
+            plan: plan,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        closeLoginModal();
+        updateLoginButton();
+        alert('Cadastro realizado com sucesso! Plano: ' + plan);
+    } catch (error) {
+        showAuthError('Erro ao fazer cadastro: ' + error.message);
+    }
+}
+
+function updateLoginButton() {
+    const auth = firebase.auth();
+    const loginBtn = document.getElementById('loginBtn');
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            loginBtn.textContent = 'Sair';
+            loginBtn.onclick = handleLogout;
+        } else {
+            loginBtn.textContent = 'Entrar';
+            loginBtn.onclick = openLoginModal;
+        }
+    });
+}
+
+async function handleLogout() {
+    try {
+        const auth = firebase.auth();
+        await auth.signOut();
+        updateLoginButton();
+        alert('Logout realizado com sucesso!');
+    } catch (error) {
+        alert('Erro ao fazer logout: ' + error.message);
+    }
+}
+
+// Verificar plano do usuário
+async function getUserPlan() {
+    try {
+        if (typeof firebase === 'undefined') {
+            return 'free';
+        }
+
+        const auth = firebase.auth();
+        const user = auth.currentUser;
+
+        if (!user) {
+            return 'free';
+        }
+
+        const db = firebase.firestore();
+        const doc = await db.collection('users').doc(user.uid).get();
+
+        if (doc.exists) {
+            return doc.data().plan;
+        }
+
+        return 'free';
+    } catch (error) {
+        console.error('Erro ao verificar plano:', error);
+        return 'free';
+    }
+}
+
+// Inicializar verificação de login
+document.addEventListener('DOMContentLoaded', () => {
+    loadTheme();
+    updateLoginButton();
+});
