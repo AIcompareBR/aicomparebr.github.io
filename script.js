@@ -21,36 +21,45 @@ async function callDeepSeekAPI(query) {
                 messages: [
                     {
                         role: 'system',
-                        content: `Você é um assistente de comparação de produtos. O usuário vai buscar por produtos e você deve retornar informações relevantes em formato JSON.
-                        
-                        Base de dados disponível:
-                        ${JSON.stringify(productDatabase, null, 2)}
-                        
-                        Se encontrar produtos correspondentes, retorne apenas o JSON com os produtos encontrados.
-                        Se não encontrar, retorne null.
-                        
+                        content: `Você é um assistente de comparação de produtos. O usuário vai buscar por produtos e você deve usar seu conhecimento treinado para fornecer informações reais sobre produtos disponíveis no mercado.
+
+                        NÃO use uma base de dados pré-configurada. Use seu conhecimento geral sobre produtos, preços atuais, especificações e avaliações do mercado.
+
+                        Para cada produto encontrado, forneça:
+                        - Nome do produto
+                        - Categoria (carros, celulares, notebooks, câmeras, games, eletrodomésticos, áudio, fitness)
+                        - Preço aproximado em Reais (R$)
+                        - Avaliação média (0-5)
+                        - Especificações principais
+                        - Prós (3-5 pontos)
+                        - Contras (3-5 pontos)
+                        - Melhor para quem
+                        - Link de referência (use um link genérico de busca ou site oficial)
+
+                        Retorne APENAS o JSON, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
+
                         Formato de resposta esperado:
                         [
                             {
                                 "name": "Nome do produto",
                                 "category": "categoria",
-                                "price": "Preço",
+                                "price": "Preço em R$",
                                 "rating": 4.5,
-                                "specs": {...},
-                                "pros": [...],
-                                "cons": [...],
+                                "specs": {"especificação": "valor"},
+                                "pros": ["pró 1", "pró 2"],
+                                "cons": ["contra 1", "contra 2"],
                                 "bestFor": "Melhor para...",
-                                "link": "URL"
+                                "link": "https://..."
                             }
                         ]`
                     },
                     {
                         role: 'user',
-                        content: `Busque por: ${query}`
+                        content: `Busque informações sobre: ${query}. Forneça 3-5 produtos relevantes com detalhes completos.`
                     }
                 ],
-                temperature: 0.3,
-                max_tokens: 2000
+                temperature: 0.7,
+                max_tokens: 3000
             })
         });
 
@@ -59,10 +68,13 @@ async function callDeepSeekAPI(query) {
         if (data.choices && data.choices[0]) {
             const content = data.choices[0].message.content;
             try {
-                const parsed = JSON.parse(content);
+                // Remover markdown code blocks se existirem
+                const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                const parsed = JSON.parse(cleanContent);
                 return parsed;
             } catch (e) {
                 console.error('Erro ao parsear resposta da IA:', e);
+                console.error('Conteúdo da resposta:', content);
                 return null;
             }
         }
