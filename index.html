@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIC - AI Compare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🤖 AIC</div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#categorias">Categorias</a></li>
+                <li><a href="#comparar">Comparar</a></li>
+                <li><a href="#precos">Preços</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <h1>Compare QUALQUER Coisa com IA</h1>
+            <p>Carros, celulares, notebooks, câmeras e muito mais. Digite o que quer comparar e nossa IA faz o resto!</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Ex: iPhone 15 vs Samsung Galaxy S24, ou 'melhor carro até 50k'...">
+                <button onclick="aiSearch()">🤖 Pesquisar com IA</button>
+            </div>
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>IA pesquisando... isso pode levar alguns segundos</p>
+            </div>
+        </section>
+
+        <section id="resultados" class="results" style="display: none;">
+            <h2>Resultados da IA</h2>
+            <div id="aiResults"></div>
+        </section>
+
+        <section id="categorias" class="categories">
+            <h2>Categorias Populares</h2>
+            <div class="category-grid">
+                <div class="category-card" onclick="showCategory('carros')">
+                    <div class="icon">�</div>
+                    <h3>Carros</h3>
+                    <p>Compare marcas, modelos e preços</p>
+                </div>
+                <div class="category-card" onclick="showCategory('celulares')">
+                    <div class="icon">📱</div>
+                    <h3>Celulares</h3>
+                    <p>iPhone, Samsung, Xiaomi e mais</p>
+                </div>
+                <div class="category-card" onclick="showCategory('notebooks')">
+                    <div class="icon">💻</div>
+                    <h3>Notebooks</h3>
+                    <p>Dell, HP, Lenovo, Apple e mais</p>
+                </div>
+                <div class="category-card" onclick="showCategory('cameras')">
+                    <div class="icon">📷</div>
+                    <h3>Câmeras</h3>
+                    <p>Canon, Nikon, Sony, Fujifilm</p>
+                </div>
+                <div class="category-card" onclick="showCategory('games')">
+                    <div class="icon">�</div>
+                    <h3>Games</h3>
+                    <p>PlayStation, Xbox, Nintendo, PC</p>
+                </div>
+                <div class="category-card" onclick="showCategory('eletro')">
+                    <div class="icon">📺</div>
+                    <h3>Eletrodomésticos</h3>
+                    <p>Geladeiras, TVs, Máquinas de lavar</p>
+                </div>
+                <div class="category-card" onclick="showCategory('audio')">
+                    <div class="icon">🎧</div>
+                    <h3>Áudio</h3>
+                    <p>Fones, caixas, sistemas de som</p>
+                </div>
+                <div class="category-card" onclick="showCategory('fitness')">
+                    <div class="icon">💪</div>
+                    <h3>Fitness</h3>
+                    <p>Smartwatches, equipamentos</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparar" class="compare-section">
+            <h2>Comparação Rápida</h2>
+            <div class="compare-form">
+                <input type="text" id="item1" placeholder="Produto 1 (ex: iPhone 15)">
+                <span>vs</span>
+                <input type="text" id="item2" placeholder="Produto 2 (ex: Samsung S24)">
+                <button onclick="quickCompare()">Comparar</button>
+            </div>
+        </section>
+
+        <section id="precos" class="pricing">
+            <h2>Planos e Preços</h2>
+            <p>Escolha o plano ideal para você</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="plan-name">Grátis</div>
+                    <div class="plan-price">R$ 0</div>
+                    <div class="plan-period">para sempre</div>
+                    <ul class="plan-features">
+                        <li>✓ 5 buscas por dia</li>
+                        <li>✓ 8 categorias de produtos</li>
+                        <li>✓ Comparação básica</li>
+                        <li>✗ Sem histórico</li>
+                        <li>✗ Sem IA avançada</li>
+                    </ul>
+                    <button class="plan-btn">Plano Atual</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">MAIS POPULAR</div>
+                    <div class="plan-name">PRO</div>
+                    <div class="plan-price">R$ 29</div>
+                    <div class="plan-period">por mês</div>
+                    <ul class="plan-features">
+                        <li>✓ Buscas ilimitadas</li>
+                        <li>✓ Todas as categorias</li>
+                        <li>✓ IA avançada</li>
+                        <li>✓ Histórico de buscas</li>
+                        <li>✓ Comparação detalhada</li>
+                        <li>✓ Alertas de preço</li>
+                        <li>✓ Suporte prioritário</li>
+                    </ul>
+                    <button class="plan-btn primary" onclick="openCheckout('pro')">Assinar PRO</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-price">R$ 99</div>
+                    <div class="plan-period">por mês</div>
+                    <ul class="plan-features">
+                        <li>✓ Tudo do PRO</li>
+                        <li>✓ API access</li>
+                        <li>✓ Integração personalizada</li>
+                        <li>✓ Multi-usuário</li>
+                        <li>✓ Analytics avançado</li>
+                        <li>✓ Suporte dedicado</li>
+                    </ul>
+                    <button class="plan-btn" onclick="openCheckout('enterprise')">Falar com Vendas</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="about">
+            <h2>Sobre o AIC</h2>
+            <p>Use IA para comparar QUALQUER produto. Carros, eletrônicos, games e muito mais. Economize tempo e dinheiro!</p>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <h3>IA Inteligente</h3>
+                    <p>Pesquisa e compara automaticamente</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Qualquer Produto</h3>
+                    <p>Carros, celulares, notebooks, tudo</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Rápido e Fácil</h3>
+                    <p>Digite e receba a comparação instantânea</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AIC - AI Compare. Todos os direitos reservados.</p>
+        <p>Links de afiliados podem gerar comissão para nós.</p>
+    </footer>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
