@@ -658,63 +658,57 @@ async function aiSearch() {
     } else {
         // Fallback para busca local se API falhar ou não estiver configurada
         console.log('Usando busca local para:', query);
-        const searchTerms = query.split(' ').filter(term => term.length > 1); // Reduzi de 2 para 1
+        const searchTerms = query.split(' ').filter(term => term.length > 2);
         
         for (const category in productDatabase) {
             const products = productDatabase[category];
             for (const product of products) {
                 let match = false;
+                let matchScore = 0;
                 
-                // Busca por nome exato ou parcial
+                // Busca por nome exato ou parcial (prioridade alta)
                 if (product.name.toLowerCase().includes(query)) {
-                    match = true;
+                    matchScore += 10;
                     console.log('Match por nome:', product.name);
                 }
                 
-                // Busca por categoria
+                // Busca por categoria (prioridade média)
                 if (category.toLowerCase().includes(query)) {
-                    match = true;
+                    matchScore += 5;
                     console.log('Match por categoria:', category);
                 }
                 
-                // Busca por especificações
+                // Busca por especificações (prioridade baixa)
                 for (const spec in product.specs) {
                     if (String(product.specs[spec]).toLowerCase().includes(query)) {
-                        match = true;
+                        matchScore += 2;
                         console.log('Match por especificação:', spec, product.specs[spec]);
                     }
                 }
                 
-                // Busca por prós/contras
-                if (product.pros.some(pro => pro.toLowerCase().includes(query))) {
-                    match = true;
-                    console.log('Match por prós:', product.name);
-                }
-                
-                if (product.cons.some(con => con.toLowerCase().includes(query))) {
-                    match = true;
-                    console.log('Match por contras:', product.name);
-                }
-                
-                // Busca por termos múltiplos (OR em vez de AND)
+                // Busca por termos múltiplos (AND - todos os termos devem estar presentes)
                 if (searchTerms.length > 0) {
-                    const anyTermMatch = searchTerms.some(term => 
+                    const allTermsMatch = searchTerms.every(term => 
                         product.name.toLowerCase().includes(term) ||
                         category.toLowerCase().includes(term) ||
-                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term)) ||
-                        product.pros.some(pro => pro.toLowerCase().includes(term))
+                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
                     );
-                    if (anyTermMatch) {
-                        match = true;
-                        console.log('Match por termos múltiplos:', product.name);
+                    if (allTermsMatch) {
+                        matchScore += 8;
+                        console.log('Match por termos múltiplos (AND):', product.name);
                     }
                 }
                 
-                if (match) {
-                    results.push({ ...product, category });
+                // Só adiciona se tiver match suficiente
+                if (matchScore >= 5) {
+                    match = true;
+                    results.push({ ...product, category, matchScore });
                 }
             }
         }
+        
+        // Ordenar por relevância (matchScore)
+        results.sort((a, b) => b.matchScore - a.matchScore);
         
         console.log('Resultados encontrados:', results.length);
     }
