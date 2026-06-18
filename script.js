@@ -4,7 +4,7 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Função para chamar a API do DeepSeek
 async function callDeepSeekAPI(query) {
-    if (DEEPSEEK_API_KEY === 'sk-934213f8c61d4e5bb781640ddf9675fd') {
+    if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
         console.warn('API key do DeepSeek não configurada. Usando busca local.');
         return null;
     }
@@ -14,7 +14,7 @@ async function callDeepSeekAPI(query) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sk-934213f8c61d4e5bb781640ddf9675fd}`
+                'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
             },
             body: JSON.stringify({
                 model: 'deepseek-chat',
@@ -267,54 +267,54 @@ const productDatabase = {
     games: [
         {
             name: "PlayStation 5",
-            price: "R$ 4.000 - R$ 5.000",
+            price: "R$ 3.500 - R$ 4.500",
             rating: 4.7,
             specs: {
+                cpu: "AMD Zen 2 8-core",
+                gpu: "AMD RDNA 2 10.28 TFLOPS",
                 armazenamento: "825GB SSD",
-                resolucao: "4K/8K",
-                fps: " até 120fps",
-                exclusivos: "God of War, Spider-Man"
+                saida: "4K 120Hz"
             },
-            pros: ["Exclusivos incríveis", "DualSense inovador", "Design bonito", "SSD rápido"],
-            cons: ["Caro no Brasil", "Sem retrocompatibilidade total", "Grande", "Jogos caros"],
-            bestFor: "Quem quer exclusivos PlayStation",
-            link: "https://www.playstation.com/pt-br/ps5"
+            pros: ["Exclusivos incríveis", "DualSense inovador", "4K nativo", "SSD rápido"],
+            cons: ["Caro no Brasil", "Sem retrocompatibilidade total", "Design grande", "Sem Game Pass"],
+            bestFor: "Quem quer exclusivos Sony e experiência premium",
+            link: "https://www.playstation.com/ps5"
         },
         {
             name: "Xbox Series X",
-            price: "R$ 4.500 - R$ 5.500",
-            rating: 4.5,
+            price: "R$ 3.000 - R$ 4.000",
+            rating: 4.6,
             specs: {
+                cpu: "AMD Zen 2 8-core",
+                gpu: "AMD RDNA 2 12 TFLOPS",
                 armazenamento: "1TB SSD",
-                resolucao: "4K",
-                fps: " até 120fps",
-                exclusivos: "Halo, Forza"
+                saida: "4K 120Hz"
             },
-            pros: ["Game Pass", "Retrocompatibilidade total", "Potência bruta", "Design compacto"],
-            cons: ["Menos exclusivos", "Caro", "Serviços limitados no Brasil", "Controle básico"],
-            bestFor: "Quem quer Game Pass e retrocompatibilidade",
+            pros: ["Game Pass", "Power mais forte", "Retrocompatibilidade", "Quick Resume"],
+            cons: ["Menos exclusivos", "Design grande", "Controle básico", "Sem inovação"],
+            bestFor: "Quem quer Game Pass e melhor custo-benefício",
             link: "https://www.xbox.com/pt-BR/consoles/xbox-series-x"
         },
         {
             name: "Nintendo Switch OLED",
-            price: "R$ 2.500 - R$ 3.000",
-            rating: 4.4,
+            price: "R$ 2.000 - R$ 2.500",
+            rating: 4.5,
             specs: {
-                tela: "7\" OLED",
-                resolucao: "720p",
-                bateria: "4.5-9 horas",
-                exclusivos: "Zelda, Mario, Pokemon"
+                cpu: "NVIDIA Tegra X1",
+                gpu: "NVIDIA Tegra X1",
+                armazenamento: "64GB",
+                tela: "7\" OLED"
             },
-            pros: ["Portátil", "Exclusivos únicos", "Preço menor", "Família"],
-            cons: ["Gráficos fracos", "720p only", "Joycon drift", "Online ruim"],
-            bestFor: "Famílias e jogadores casuais",
-            link: "https://www.nintendo.com/switch-oled-model"
+            pros: ["Portátil", "Exclusivos Nintendo", "Tela OLED", "Joy-Con"],
+            cons: ["Hardware fraco", "720p handheld", "Caro", "Sem 4K"],
+            bestFor: "Quem quer portabilidade e jogos Nintendo",
+            link: "https://www.nintendo.com/switch"
         }
     ],
-    eletro: [
+    eletrodomesticos: [
         {
-            name: "Samsung Neo QLED 8K",
-            price: "R$ 15.000 - R$ 25.000",
+            name: "Samsung Neo QLED 8K 75\"",
+            price: "R$ 25.000 - R$ 35.000",
             rating: 4.6,
             specs: {
                 tela: "75\" 8K",
@@ -323,45 +323,45 @@ const productDatabase = {
                 smart: "Tizen"
             },
             pros: ["8K impressionante", "Cores vibrantes", "Smart TV bom", "Design fino"],
-            cons: ["Muito caro", "Conteúdo 8K raro", "Consumo energia", "Tizen limitado"],
-            bestFor: "Quem quer o melhor em qualidade de imagem",
-            link: "https://www.samsung.com/br/tv"
+            cons: ["Muito caro", "Pouco conteúdo 8K", "Consumo alto", "Remoto complexo"],
+            bestFor: "Quem quer a melhor qualidade de imagem",
+            link: "https://www.samsung.com/br/tv/qled/"
         },
         {
-            name: "LG OLED C3",
-            price: "R$ 8.000 - R$ 15.000",
+            name: "LG OLED C3 65\"",
+            price: "R$ 8.000 - R$ 12.000",
             rating: 4.8,
             specs: {
-                tela: "55\"-65\" 4K",
+                tela: "65\" 4K",
                 tecnologia: "OLED",
                 hdr: "Dolby Vision",
                 smart: "webOS"
             },
-            pros: ["Preto perfeito", "Cores precisas", "Dolby Vision", "webOS excelente"],
-            cons: ["Risco de burn-in", "Caro", "Brilho menor que QLED", "Reflexos"],
-            bestFor: "Cinefilos e gamers",
-            link: "https://www.lg.com/br/tv"
+            pros: ["Preto perfeito", "Cores precisas", "Design fino", "webOS excelente"],
+            cons: ["Burn-in risco", "Preço alto", "Brilho menor", "Não 8K"],
+            bestFor: "Cinemófilos e gamers",
+            link: "https://www.lg.com/br/tvs/lg-oled-tv-c3"
         },
         {
-            name: "Geladeira Samsung Inverter",
-            price: "R$ 4.000 - R$ 7.000",
+            name: "Samsung Galaxy Book3 Pro",
+            price: "R$ 8.000 - R$ 12.000",
             rating: 4.5,
             specs: {
-                capacidade: "500L",
-                tecnologia: "Inverter",
-                frost: "Frost Free",
-                consumo: "A++"
+                processador: "Intel i7",
+                ram: "16GB",
+                armazenamento: "512GB SSD",
+                tela: "16\" AMOLED"
             },
-            pros: ["Econômica", "Silenciosa", "Frost Free", "Design moderno"],
-            cons: ["Caro", "Manutenção cara", "Peças Samsung", "Tamanho grande"],
-            bestFor: "Famílias que quer economia e espaço",
-            link: "https://www.samsung.com/br/home-appliances"
+            pros: ["Tela AMOLED", "Leve", "Bateria boa", "Design elegante"],
+            cons: ["Caro", "Sem GPU dedicada", "Portas limitadas", "Bloatware"],
+            bestFor: "Profissionais móveis",
+            link: "https://www.samsung.com/br/computing/galaxy-book/"
         }
     ],
     audio: [
         {
             name: "Sony WH-1000XM5",
-            price: "R$ 2.000 - R$ 2.500",
+            price: "R$ 2.500 - R$ 3.000",
             rating: 4.8,
             specs: {
                 tipo: "Over-ear",
@@ -369,14 +369,14 @@ const productDatabase = {
                 bateria: "30 horas",
                 bluetooth: "5.2"
             },
-            pros: ["Melhor cancelamento", "Som excelente", "Confortável", "Multiponto"],
-            cons: ["Caro", "Não dobrável", "Plástico barato", "Sem aux 3.5mm"],
-            bestFor: "Quem quer o melhor cancelamento de ruído",
-            link: "https://www.sony.com/br/headphones"
+            pros: ["Melhor ANC", "Som excelente", "Confortável", "Design premium"],
+            cons: ["Caro", "Sem dobrar", "Plástico", "Não resistente à água"],
+            bestFor: "Viajantes e escritório",
+            link: "https://www.sony.com/br/electronics/headphones/wh-1000xm5"
         },
         {
             name: "AirPods Pro 2",
-            price: "R$ 1.800 - R$ 2.200",
+            price: "R$ 2.000 - R$ 2.500",
             rating: 4.7,
             specs: {
                 tipo: "In-ear",
@@ -384,57 +384,57 @@ const productDatabase = {
                 bateria: "6 horas",
                 bluetooth: "5.3"
             },
-            pros: ["Ecossistema Apple", "Cancelamento bom", "Som claro", "Compacto"],
-            cons: ["Caro", "Bateria curta", "Só iOS", "Cabo Lightning"],
-            bestFor: "Usuários iPhone",
+            pros: ["ANC excelente", "Integração Apple", "Som bom", "Compacto"],
+            cons: ["Caro", "Bateria curta", "Não Android", "Cabo Lightning"],
+            bestFor: "Usuários Apple",
             link: "https://www.apple.com/br/airpods-pro"
         },
         {
             name: "JBL Flip 6",
-            price: "R$ 600 - R$ 800",
+            price: "R$ 500 - R$ 700",
             rating: 4.4,
             specs: {
                 tipo: "Portátil",
                 potencia: "30W",
                 bateria: "12 horas",
-                resistencia: "IP67"
+                bluetooth: "5.3"
             },
-            pros: ["Preço justo", "Resistente à água", "Som potente", "Portátil"],
-            cons: ["Sem cancelamento", "Bateria média", "Bass fraco", "Sem app bom"],
-            bestFor: "Quer caixa portátil resistente",
-            link: "https://www.jbl.com/br"
+            pros: ["Portátil", "Resistente à água", "Preço bom", "Som decente"],
+            cons: ["Sem ANC", "Bateria média", "Sem app bom", "Grave fraco"],
+            bestFor: "Uso outdoor e casual",
+            link: "https://www.jbl.com/br/portable-speakers/jbl-flip-6"
         }
     ],
     fitness: [
         {
-            name: "Apple Watch Ultra 2",
-            price: "R$ 6.000 - R$ 7.000",
-            rating: 4.8,
-            specs: {
-                tela: "1.92\" Retina",
-                bateria: "36 horas",
-                resistencia: "100m",
-                gps: "Dual-frequency"
-            },
-            pros: ["Tela brilhante", "Bateria melhor", "Super resistente", "Ecossistema"],
-            cons: ["Muito caro", "Só iOS", "Grande", "Pesado"],
-            bestFor: "Atletas e usuários iPhone",
-            link: "https://www.apple.com/br/apple-watch-ultra"
-        },
-        {
-            name: "Garmin Fenix 7",
-            price: "R$ 5.000 - R$ 7.000",
+            name: "Apple Watch Series 9",
+            price: "R$ 4.000 - R$ 5.000",
             rating: 4.7,
             specs: {
-                tela: "1.3\" MIP",
-                bateria: "18 dias",
-                resistencia: "100m",
-                gps: "Multi-GNSS"
+                tela: "1.9\" OLED",
+                bateria: "18 horas",
+                gps: "Sim",
+                resistencia: "50m"
             },
-            pros: ["Bateria incrível", "GPS preciso", "Muitos esportes", "Super resistente"],
-            cons: ["Caro", "Tela escura", "Interface complexa", "Pesado"],
-            bestFor: "Atletas sérios e aventureiros",
-            link: "https://www.garmin.com/br"
+            pros: ["Melhor smartwatch", "Integração Apple", "Sensores avançados", "Design bonito"],
+            cons: ["Caro", "Bateria curta", "Só iOS", "Carregador proprietário"],
+            bestFor: "Usuários iPhone",
+            link: "https://www.apple.com/br/apple-watch-series-9"
+        },
+        {
+            name: "Garmin Forerunner 265",
+            price: "R$ 2.500 - R$ 3.000",
+            rating: 4.6,
+            specs: {
+                tela: "1.3\" AMOLED",
+                bateria: "13 dias",
+                gps: "Dual-band",
+                resistencia: "50m"
+            },
+            pros: ["Bateria excelente", "GPS preciso", "Dados corrida", "Resistente"],
+            cons: ["Design esportivo", "Caro", "App básico", "Sem smart features"],
+            bestFor: "Corredores e triatletas",
+            link: "https://www.garmin.com/br/product/forerunner-265"
         },
         {
             name: "Xiaomi Band 8",
@@ -443,126 +443,16 @@ const productDatabase = {
             specs: {
                 tela: "1.62\" AMOLED",
                 bateria: "16 dias",
-                resistencia: "5ATM",
-                gps: "Não"
+                gps: "Não",
+                resistencia: "50m"
             },
-            pros: ["Preço imbatível", "Bateria excelente", "Leve", "Muitos modos"],
-            cons: ["Sem GPS", "Build plástico", "App limitado", "Notificações básicas"],
-            bestFor: "Quer fitness tracker barato",
-            link: "https://www.mi.com/br"
+            pros: ["Muito barato", "Bateria incrível", "Leve", "Funcionalidades básicas"],
+            cons: ["Sem GPS", "Tela pequena", "App básico", "Qualidade construção"],
+            bestFor: "Quem quer tracker básico barato",
+            link: "https://www.mi.com/global/product/mi-smart-band-8/"
         }
     ]
 };
-
-// Função de busca com IA (simulada)
-async function aiSearch() {
-    const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    if (!query) {
-        alert('Digite algo para buscar!');
-        return;
-    }
-    
-    // Mostrar loading
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('resultados').style.display = 'none';
-    
-    // Simular delay da IA
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Buscar nos dados - busca mais flexível
-    let results = [];
-    const searchTerms = query.split(' ').filter(term => term.length > 2);
-    
-    for (const category in productDatabase) {
-        const products = productDatabase[category];
-        for (const product of products) {
-            let match = false;
-            
-            // Busca por nome exato ou parcial
-            if (product.name.toLowerCase().includes(query)) {
-                match = true;
-            }
-            
-            // Busca por categoria
-            if (category.toLowerCase().includes(query)) {
-                match = true;
-            }
-            
-            // Busca por especificações
-            for (const spec in product.specs) {
-                if (String(product.specs[spec]).toLowerCase().includes(query)) {
-                    match = true;
-                }
-            }
-            
-            // Busca por prós/contras
-            if (product.pros.some(pro => pro.toLowerCase().includes(query))) {
-                match = true;
-            }
-            
-            // Busca por termos múltiplos
-            if (searchTerms.length > 0) {
-                const allTermsMatch = searchTerms.every(term => 
-                    product.name.toLowerCase().includes(term) ||
-                    category.toLowerCase().includes(term) ||
-                    Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
-                );
-                if (allTermsMatch) match = true;
-            }
-            
-            if (match) {
-                results.push({ ...product, category });
-            }
-        }
-    }
-    
-    // Esconder loading
-    document.getElementById('loading').style.display = 'none';
-    
-    // Mostrar resultados
-    const resultsDiv = document.getElementById('aiResults');
-    const resultsSection = document.getElementById('resultados');
-    
-    if (results.length === 0) {
-        resultsDiv.innerHTML = `
-            <div class="ai-result">
-                <h3>Nenhum resultado encontrado para "${query}"</h3>
-                <p>Tente buscar por:</p>
-                <ul style="margin-left: 20px; margin-top: 10px;">
-                    <li>Nome do produto: <strong>iPhone</strong>, <strong>Samsung</strong>, <strong>Civic</strong></li>
-                    <li>Categoria: <strong>carros</strong>, <strong>celulares</strong>, <strong>notebooks</strong></li>
-                    <li>Marca: <strong>Apple</strong>, <strong>Sony</strong>, <strong>Toyota</strong></li>
-                </ul>
-            </div>
-        `;
-    } else {
-        let html = `<p style="margin-bottom: 1rem;"><strong>${results.length}</strong> resultado(s) encontrado(s) para "${query}"</p>`;
-        results.forEach(product => {
-            html += `
-                <div class="ai-result">
-                    <h3>${product.name}</h3>
-                    <p><strong>Categoria:</strong> ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</p>
-                    <p><strong>Preço:</strong> ${product.price}</p>
-                    <p><strong>Nota:</strong> ${'★'.repeat(Math.floor(product.rating))} ${product.rating}/5</p>
-                    <p><strong>Melhor para:</strong> ${product.bestFor}</p>
-                    <div class="specs">
-                        <strong>Especificações:</strong><br>
-                        ${Object.entries(product.specs).map(([key, value]) => 
-                            `<strong>${key}:</strong> ${value}`
-                        ).join('<br>')}
-                    </div>
-                    <p style="margin-top: 1rem;"><strong>Prós:</strong> ${product.pros.join(', ')}</p>
-                    <p><strong>Contras:</strong> ${product.cons.join(', ')}</p>
-                    <a href="${product.link}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">Ver mais →</a>
-                </div>
-            `;
-        });
-        resultsDiv.innerHTML = html;
-    }
-    
-    resultsSection.style.display = 'block';
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-}
 
 // Comparação rápida
 async function quickCompare() {
@@ -767,7 +657,8 @@ async function aiSearch() {
         results = aiResults;
     } else {
         // Fallback para busca local se API falhar ou não estiver configurada
-        const searchTerms = query.split(' ').filter(term => term.length > 2);
+        console.log('Usando busca local para:', query);
+        const searchTerms = query.split(' ').filter(term => term.length > 1); // Reduzi de 2 para 1
         
         for (const category in productDatabase) {
             const products = productDatabase[category];
@@ -777,33 +668,46 @@ async function aiSearch() {
                 // Busca por nome exato ou parcial
                 if (product.name.toLowerCase().includes(query)) {
                     match = true;
+                    console.log('Match por nome:', product.name);
                 }
                 
                 // Busca por categoria
                 if (category.toLowerCase().includes(query)) {
                     match = true;
+                    console.log('Match por categoria:', category);
                 }
                 
                 // Busca por especificações
                 for (const spec in product.specs) {
                     if (String(product.specs[spec]).toLowerCase().includes(query)) {
                         match = true;
+                        console.log('Match por especificação:', spec, product.specs[spec]);
                     }
                 }
                 
                 // Busca por prós/contras
                 if (product.pros.some(pro => pro.toLowerCase().includes(query))) {
                     match = true;
+                    console.log('Match por prós:', product.name);
                 }
                 
-                // Busca por termos múltiplos
+                if (product.cons.some(con => con.toLowerCase().includes(query))) {
+                    match = true;
+                    console.log('Match por contras:', product.name);
+                }
+                
+                // Busca por termos múltiplos (OR em vez de AND)
                 if (searchTerms.length > 0) {
-                    const allTermsMatch = searchTerms.every(term => 
+                    const anyTermMatch = searchTerms.some(term => 
                         product.name.toLowerCase().includes(term) ||
                         category.toLowerCase().includes(term) ||
-                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
+                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term)) ||
+                        product.pros.some(pro => pro.toLowerCase().includes(term))
                     );
-                    if (allTermsMatch) match = true;
+                    if (anyTermMatch) {
+                        match = true;
+                        console.log('Match por termos múltiplos:', product.name);
+                    }
                 }
                 
                 if (match) {
@@ -811,6 +715,8 @@ async function aiSearch() {
                 }
             }
         }
+        
+        console.log('Resultados encontrados:', results.length);
     }
     
     // Esconder loading
