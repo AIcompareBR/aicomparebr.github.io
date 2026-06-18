@@ -1,10 +1,10 @@
 // Configuração da API DeepSeek
-const DEEPSEEK_API_KEY = 'SUA_API_KEY_AQUI'; // Substitua pela sua API key do DeepSeek
+const DEEPSEEK_API_KEY = 'sk-934213f8c61d4e5bb781640ddf9675fd'; // Substitua pela sua API key do DeepSeek
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Função para chamar a API do DeepSeek
 async function callDeepSeekAPI(query) {
-    if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
+    if (DEEPSEEK_API_KEY === 'sk-934213f8c61d4e5bb781640ddf9675fd') {
         console.warn('API key do DeepSeek não configurada. Usando busca local.');
         return null;
     }
@@ -14,7 +14,7 @@ async function callDeepSeekAPI(query) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                'Authorization': `Bearer ${sk-934213f8c61d4e5bb781640ddf9675fd}`
             },
             body: JSON.stringify({
                 model: 'deepseek-chat',
