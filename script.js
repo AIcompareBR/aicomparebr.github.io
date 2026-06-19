@@ -4,12 +4,12 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Configuração do Firebase
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY_DO_FIREBASE",
-    authDomain: "seu-projeto.firebaseapp.com",
-    projectId: "seu-projeto",
-    storageBucket: "seu-projeto.appspot.com",
-    messagingSenderId: "seu-sender-id",
-    appId: "seu-app-id"
+    apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
+    authDomain: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
+    projectId: "ia-compare",
+    storageBucket: "ia-compare.firebasestorage.app",
+    messagingSenderId: "1017161644505",
+    appId: "1:1017161644505:web:9919c93a75d2706f3041c8"
 };
 
 // Inicializar Firebase
