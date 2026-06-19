@@ -2,6 +2,10 @@
 const DEEPSEEK_API_KEY = 'sk-934213f8c61d4e5bb781640ddf9675fd'; // Substitua pela sua API key do DeepSeek
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
+// Configuração da API Hugging Face (gratuita)
+const HUGGINGFACE_API_KEY = 'SUA_API_KEY_HUGGINGFACE'; // Opcional, funciona sem para modelos públicos
+const HUGGINGFACE_API_URL = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
+
 // Configuração do Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
@@ -22,6 +26,89 @@ try {
 } catch (error) {
     console.error('Erro ao inicializar Firebase:', error);
     console.log('Firebase não configurado. Login não estará disponível.');
+}
+
+// Função para chamar a API do Hugging Face (gratuita)
+async function callHuggingFaceAPI(query) {
+    try {
+        const response = await fetch(HUGGINGFACE_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': HUGGINGFACE_API_KEY !== 'SUA_API_KEY_HUGGINGFACE' ? `Bearer ${HUGGINGFACE_API_KEY}` : undefined
+            },
+            body: JSON.stringify({
+                inputs: `Você é um assistente de comparação de produtos especializado em buscar informações de lojas e sites reais do mercado brasileiro.
+
+INSTRUÇÕES IMPORTANTES:
+1. Use seu conhecimento treinado sobre produtos atuais, preços de mercado brasileiro e especificações
+2. Forneça informações de produtos que realmente existem e estão disponíveis no mercado
+3. Inclua preços aproximados em Reais (R$) baseados no mercado atual brasileiro
+4. Para links, use URLs de sites de busca como Google Shopping, Mercado Livre, Amazon Brasil, ou sites oficiais
+5. Entenda gírias e linguagem informal do brasileiro (ex: "top", "chique", "bom e barato", "luxo")
+6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
+
+Para cada produto, forneça:
+- Nome do produto (modelo específico, não genérico)
+- Categoria (carros, celulares, notebooks, câmeras, games, eletrodomésticos, áudio, fitness)
+- Preço aproximado em Reais (R$) - seja realista
+- Avaliação média (0-5)
+- Especificações principais (detalhadas)
+- Prós (3-5 pontos específicos)
+- Contras (3-5 pontos específicos)
+- Melhor para quem (público alvo)
+- Link de referência (use Google Shopping, Mercado Livre, Amazon Brasil ou site oficial)
+
+Busque informações reais sobre: "${query}". Forneça 3-5 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.
+
+Retorne APENAS o JSON válido, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
+
+Formatato de resposta esperado:
+[
+    {
+        "name": "Nome específico do produto/modelo",
+        "category": "categoria",
+        "price": "Preço em R$ (ex: R$ 2.500)",
+        "rating": 4.5,
+        "specs": {"especificação": "valor específico"},
+        "pros": ["pró específico 1", "pró específico 2"],
+        "cons": ["contra específico 1", "contra específico 2"],
+        "bestFor": "Público alvo específico",
+        "link": "https://shopping.google.com/..."
+    }
+]`,
+                parameters: {
+                    max_new_tokens: 3000,
+                    temperature: 0.8,
+                    return_full_text: false
+                }
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data && data[0] && data[0].generated_text) {
+            const content = data[0].generated_text;
+            try {
+                // Tentar extrair JSON da resposta
+                const jsonMatch = content.match(/\[[\s\S]*\]/);
+                if (jsonMatch) {
+                    const parsed = JSON.parse(jsonMatch[0]);
+                    return parsed;
+                }
+                return null;
+            } catch (e) {
+                console.error('Erro ao parsear resposta da IA Hugging Face:', e);
+                console.error('Conteúdo da resposta:', content);
+                return null;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Erro ao chamar API do Hugging Face:', error);
+        return null;
+    }
 }
 
 // Função para chamar a API do DeepSeek
@@ -110,6 +197,11 @@ async function callDeepSeekAPI(query) {
         return null;
     } catch (error) {
         console.error('Erro ao chamar API do DeepSeek:', error);
+        // Se erro 402 (sem créditos), tentar Hugging Face
+        if (error.message.includes('402') || error.message.includes('Payment Required')) {
+            console.log('DeepSeek sem créditos. Tentando Hugging Face (gratuito)...');
+            return await callHuggingFaceAPI(query);
+        }
         return null;
     }
 }
@@ -639,9 +731,15 @@ window.onclick = function(event) {
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+        const targetId = this.getAttribute('href');
+        if (targetId !== '#') {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
     });
 });
 
