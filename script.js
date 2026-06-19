@@ -3,7 +3,8 @@ const DEEPSEEK_API_KEY = 'sk-934213f8c61d4e5bb781640ddf9675fd'; // Substitua pel
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Configuração do Firebase
-const firebaseConfig = { apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
+const firebaseConfig = { 
+  apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
   authDomain: "ia-compare.firebaseapp.com",
   projectId: "ia-compare",
   storageBucket: "ia-compare.firebasestorage.app",
