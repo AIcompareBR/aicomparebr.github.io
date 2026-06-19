@@ -29,7 +29,17 @@ try {
 }
 
 // Função para chamar a API do Hugging Face (gratuita)
-async function callHuggingFaceAPI(query) {
+async function callHuggingFaceAPI(query, priceFilter = 'all') {
+    // Converter filtro de preço para instrução
+    let priceInstruction = '';
+    if (priceFilter === 'cheap') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos baratos, com preço até R$ 1.000. Não inclua produtos mais caros.';
+    } else if (priceFilter === 'medium') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos na faixa de preço médio, entre R$ 1.000 e R$ 5.000. Não inclua produtos fora dessa faixa.';
+    } else if (priceFilter === 'expensive') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos caros/premium, com preço acima de R$ 5.000. Não inclua produtos mais baratos.';
+    }
+
     try {
         const response = await fetch(HUGGINGFACE_API_URL, {
             method: 'POST',
@@ -48,6 +58,8 @@ INSTRUÇÕES IMPORTANTES:
 5. Entenda gírias e linguagem informal do brasileiro (ex: "top", "chique", "bom e barato", "luxo")
 6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
 
+${priceInstruction}
+
 Para cada produto, forneça:
 - Nome do produto (modelo específico, não genérico)
 - Categoria (carros, celulares, notebooks, câmeras, games, eletrodomésticos, áudio, fitness)
@@ -59,7 +71,7 @@ Para cada produto, forneça:
 - Melhor para quem (público alvo)
 - Link de referência (use Google Shopping, Mercado Livre, Amazon Brasil ou site oficial)
 
-Busque informações reais sobre: "${query}". Forneça 3-5 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.
+Busque informações reais sobre: "${query}". Forneça 10-20 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.
 
 Retorne APENAS o JSON válido, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
 
@@ -78,7 +90,7 @@ Formatato de resposta esperado:
     }
 ]`,
                 parameters: {
-                    max_new_tokens: 3000,
+                    max_new_tokens: 4000,
                     temperature: 0.8,
                     return_full_text: false
                 }
@@ -112,10 +124,20 @@ Formatato de resposta esperado:
 }
 
 // Função para chamar a API do DeepSeek
-async function callDeepSeekAPI(query) {
+async function callDeepSeekAPI(query, priceFilter = 'all') {
     if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
         console.warn('API key do DeepSeek não configurada. Usando busca local.');
         return null;
+    }
+
+    // Converter filtro de preço para instrução
+    let priceInstruction = '';
+    if (priceFilter === 'cheap') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos baratos, com preço até R$ 1.000. Não inclua produtos mais caros.';
+    } else if (priceFilter === 'medium') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos na faixa de preço médio, entre R$ 1.000 e R$ 5.000. Não inclua produtos fora dessa faixa.';
+    } else if (priceFilter === 'expensive') {
+        priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos caros/premium, com preço acima de R$ 5.000. Não inclua produtos mais baratos.';
     }
 
     try {
@@ -139,6 +161,8 @@ async function callDeepSeekAPI(query) {
                         4. Para links, use URLs de sites de busca como Google Shopping, Mercado Livre, Amazon Brasil, ou sites oficiais
                         5. Entenda gírias e linguagem informal do brasileiro (ex: "top", "chique", "bom e barato", "luxo")
                         6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
+
+                        ${priceInstruction}
 
                         Para cada produto, forneça:
                         - Nome do produto (modelo específico, não genérico)
@@ -170,11 +194,11 @@ async function callDeepSeekAPI(query) {
                     },
                     {
                         role: 'user',
-                        content: `Busque informações reais sobre: "${query}". Forneça 3-5 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.`
+                        content: `Busque informações reais sobre: "${query}". Forneça 10-20 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.`
                     }
                 ],
                 temperature: 0.8,
-                max_tokens: 3500
+                max_tokens: 4000
             })
         });
 
@@ -200,7 +224,7 @@ async function callDeepSeekAPI(query) {
         // Se erro 402 (sem créditos), tentar Hugging Face
         if (error.message.includes('402') || error.message.includes('Payment Required')) {
             console.log('DeepSeek sem créditos. Tentando Hugging Face (gratuito)...');
-            return await callHuggingFaceAPI(query);
+            return await callHuggingFaceAPI(query, priceFilter);
         }
         return null;
     }
@@ -775,20 +799,21 @@ async function aiSearch() {
     }
     
     searchCount++;
-    
+
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    const priceFilter = document.getElementById('priceFilter').value;
     if (!query) {
         alert('Digite algo para buscar!');
         return;
     }
-    
+
     // Mostrar loading
     document.getElementById('loading').style.display = 'block';
     document.getElementById('resultados').style.display = 'none';
-    
+
     // Tentar usar API do DeepSeek primeiro
     let results = [];
-    const aiResults = await callDeepSeekAPI(query);
+    const aiResults = await callDeepSeekAPI(query, priceFilter);
     
     if (aiResults && Array.isArray(aiResults) && aiResults.length > 0) {
         // Usar resultados da IA
