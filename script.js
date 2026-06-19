@@ -29,7 +29,7 @@ try {
 }
 
 // Função para chamar a API do Hugging Face (gratuita)
-async function callHuggingFaceAPI(query, priceFilter = 'all') {
+async function callHuggingFaceAPI(query, priceFilter = 'all', categoryFilter = 'all') {
     // Converter filtro de preço para instrução
     let priceInstruction = '';
     if (priceFilter === 'cheap') {
@@ -38,6 +38,22 @@ async function callHuggingFaceAPI(query, priceFilter = 'all') {
         priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos na faixa de preço médio, entre R$ 1.000 e R$ 5.000. Não inclua produtos fora dessa faixa.';
     } else if (priceFilter === 'expensive') {
         priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos caros/premium, com preço acima de R$ 5.000. Não inclua produtos mais baratos.';
+    }
+
+    // Converter filtro de categoria para instrução
+    let categoryInstruction = '';
+    if (categoryFilter !== 'all') {
+        const categoryNames = {
+            'carros': 'carros/veículos',
+            'celulares': 'celulares/smartphones',
+            'notebooks': 'notebooks/laptops',
+            'cameras': 'câmeras/fotografia',
+            'games': 'games/consoles',
+            'eletrodomesticos': 'eletrodomésticos/TVs',
+            'audio': 'áudio/fones de ouvido/colunas',
+            'fitness': 'fitness/smartwatches'
+        };
+        categoryInstruction = `FILTRO DE CATEGORIA: Forneça APENAS produtos da categoria ${categoryNames[categoryFilter] || categoryFilter}. Não inclua produtos de outras categorias.`;
     }
 
     try {
@@ -59,6 +75,7 @@ INSTRUÇÕES IMPORTANTES:
 6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
 
 ${priceInstruction}
+${categoryInstruction}
 
 Para cada produto, forneça:
 - Nome do produto (modelo específico, não genérico)
@@ -124,7 +141,7 @@ Formatato de resposta esperado:
 }
 
 // Função para chamar a API do DeepSeek
-async function callDeepSeekAPI(query, priceFilter = 'all') {
+async function callDeepSeekAPI(query, priceFilter = 'all', categoryFilter = 'all') {
     if (DEEPSEEK_API_KEY === 'SUA_API_KEY_AQUI') {
         console.warn('API key do DeepSeek não configurada. Usando busca local.');
         return null;
@@ -138,6 +155,22 @@ async function callDeepSeekAPI(query, priceFilter = 'all') {
         priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos na faixa de preço médio, entre R$ 1.000 e R$ 5.000. Não inclua produtos fora dessa faixa.';
     } else if (priceFilter === 'expensive') {
         priceInstruction = 'FILTRO DE PREÇO: Forneça APENAS produtos caros/premium, com preço acima de R$ 5.000. Não inclua produtos mais baratos.';
+    }
+
+    // Converter filtro de categoria para instrução
+    let categoryInstruction = '';
+    if (categoryFilter !== 'all') {
+        const categoryNames = {
+            'carros': 'carros/veículos',
+            'celulares': 'celulares/smartphones',
+            'notebooks': 'notebooks/laptops',
+            'cameras': 'câmeras/fotografia',
+            'games': 'games/consoles',
+            'eletrodomesticos': 'eletrodomésticos/TVs',
+            'audio': 'áudio/fones de ouvido/colunas',
+            'fitness': 'fitness/smartwatches'
+        };
+        categoryInstruction = `FILTRO DE CATEGORIA: Forneça APENAS produtos da categoria ${categoryNames[categoryFilter] || categoryFilter}. Não inclua produtos de outras categorias.`;
     }
 
     try {
@@ -163,6 +196,7 @@ async function callDeepSeekAPI(query, priceFilter = 'all') {
                         6. Se o usuário pedir algo vago, forneça produtos populares e bem avaliados na categoria
 
                         ${priceInstruction}
+                        ${categoryInstruction}
 
                         Para cada produto, forneça:
                         - Nome do produto (modelo específico, não genérico)
@@ -1642,6 +1676,7 @@ async function aiSearch() {
 
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     const priceFilter = document.getElementById('priceFilter').value;
+    const categoryFilter = document.getElementById('categoryFilter').value;
     if (!query) {
         alert('Digite algo para buscar!');
         return;
@@ -1653,7 +1688,7 @@ async function aiSearch() {
 
     // Tentar usar API do DeepSeek primeiro
     let results = [];
-    const aiResults = await callDeepSeekAPI(query, priceFilter);
+    const aiResults = await callDeepSeekAPI(query, priceFilter, categoryFilter);
 
     if (aiResults && Array.isArray(aiResults) && aiResults.length > 0) {
         // Usar resultados da IA
@@ -1661,7 +1696,7 @@ async function aiSearch() {
     } else {
         // Tentar Hugging Face como fallback se DeepSeek falhar
         console.log('DeepSeek falhou. Tentando Hugging Face...');
-        const hfResults = await callHuggingFaceAPI(query, priceFilter);
+        const hfResults = await callHuggingFaceAPI(query, priceFilter, categoryFilter);
 
         if (hfResults && Array.isArray(hfResults) && hfResults.length > 0) {
             // Usar resultados do Hugging Face
@@ -1670,8 +1705,12 @@ async function aiSearch() {
             // Fallback para busca local se ambas as APIs falharem
             console.log('Hugging Face falhou. Usando busca local para:', query);
             const searchTerms = query.split(' ').filter(term => term.length > 2);
-        
+
         for (const category in productDatabase) {
+            // Aplicar filtro de categoria se selecionado
+            if (categoryFilter !== 'all' && category !== categoryFilter) {
+                continue;
+            }
             const products = productDatabase[category];
             for (const product of products) {
                 let match = false;
@@ -1710,8 +1749,8 @@ async function aiSearch() {
                     }
                 }
                 
-                // Só adiciona se tiver match suficiente
-                if (matchScore >= 5) {
+                // Só adiciona se tiver match suficiente (reduzido de 5 para 1 para ser mais inclusivo)
+                if (matchScore >= 1) {
                     match = true;
                     results.push({ ...product, category, matchScore });
                 }
@@ -1750,8 +1789,8 @@ async function aiSearch() {
             console.log('Resultados após filtro de preço:', results.length);
         }
 
-        // Limitar a 20 resultados (aumentado de 3)
-        results = results.slice(0, 20);
+        // Limitar a 50 resultados (aumentado de 20)
+        results = results.slice(0, 50);
 
         console.log('Resultados encontrados:', results.length);
         }
