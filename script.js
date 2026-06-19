@@ -88,7 +88,7 @@ Para cada produto, forneça:
 - Melhor para quem (público alvo)
 - Link de referência (use Google Shopping, Mercado Livre, Amazon Brasil ou site oficial)
 
-Busque informações reais sobre: "${query}". Forneça 10-20 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.
+Busque informações reais sobre: "${query}". Forneça 20-30 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.
 
 Retorne APENAS o JSON válido, sem texto adicional. Se não encontrar produtos relevantes, retorne um array vazio [].
 
@@ -228,7 +228,7 @@ async function callDeepSeekAPI(query, priceFilter = 'all', categoryFilter = 'all
                     },
                     {
                         role: 'user',
-                        content: `Busque informações reais sobre: "${query}". Forneça 10-20 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.`
+                        content: `Busque informações reais sobre: "${query}". Forneça 20-30 produtos específicos que existem no mercado brasileiro atual, com preços realistas e detalhes completos.`
                     }
                 ],
                 temperature: 0.8,
@@ -1702,97 +1702,9 @@ async function aiSearch() {
             // Usar resultados do Hugging Face
             results = hfResults;
         } else {
-            // Fallback para busca local se ambas as APIs falharem
-            console.log('Hugging Face falhou. Usando busca local para:', query);
-            const searchTerms = query.split(' ').filter(term => term.length > 2);
-
-        for (const category in productDatabase) {
-            // Aplicar filtro de categoria se selecionado
-            if (categoryFilter !== 'all' && category !== categoryFilter) {
-                continue;
-            }
-            const products = productDatabase[category];
-            for (const product of products) {
-                let match = false;
-                let matchScore = 0;
-                
-                // Busca por nome exato ou parcial (prioridade alta)
-                if (product.name.toLowerCase().includes(query)) {
-                    matchScore += 10;
-                    console.log('Match por nome:', product.name);
-                }
-                
-                // Busca por categoria (prioridade média)
-                if (category.toLowerCase().includes(query)) {
-                    matchScore += 5;
-                    console.log('Match por categoria:', category);
-                }
-                
-                // Busca por especificações (prioridade baixa)
-                for (const spec in product.specs) {
-                    if (String(product.specs[spec]).toLowerCase().includes(query)) {
-                        matchScore += 2;
-                        console.log('Match por especificação:', spec, product.specs[spec]);
-                    }
-                }
-                
-                // Busca por termos múltiplos (AND - todos os termos devem estar presentes)
-                if (searchTerms.length > 0) {
-                    const allTermsMatch = searchTerms.every(term => 
-                        product.name.toLowerCase().includes(term) ||
-                        category.toLowerCase().includes(term) ||
-                        Object.values(product.specs).some(spec => String(spec).toLowerCase().includes(term))
-                    );
-                    if (allTermsMatch) {
-                        matchScore += 8;
-                        console.log('Match por termos múltiplos (AND):', product.name);
-                    }
-                }
-                
-                // Só adiciona se tiver match suficiente (reduzido de 5 para 1 para ser mais inclusivo)
-                if (matchScore >= 1) {
-                    match = true;
-                    results.push({ ...product, category, matchScore });
-                }
-            }
-        }
-        
-        // Ordenar por relevância (matchScore)
-        results.sort((a, b) => b.matchScore - a.matchScore);
-
-        // Aplicar filtro de preço na busca local
-        if (priceFilter !== 'all') {
-            results = results.filter(product => {
-                const priceStr = product.price;
-                const priceMatch = priceStr.match(/R\$\s*([\d.,]+)/);
-                if (!priceMatch) return true; // Se não conseguir extrair preço, inclui
-
-                const price = parseFloat(priceMatch[1].replace(/\./g, '').replace(',', '.'));
-                const priceRange = priceStr.match(/R\$\s*([\d.,]+)\s*-\s*R\$\s*([\d.,]+)/);
-
-                if (priceRange) {
-                    const minPrice = parseFloat(priceRange[1].replace(/\./g, '').replace(',', '.'));
-                    const maxPrice = parseFloat(priceRange[2].replace(/\./g, '').replace(',', '.'));
-                    const avgPrice = (minPrice + maxPrice) / 2;
-
-                    if (priceFilter === 'cheap') return avgPrice <= 1000;
-                    if (priceFilter === 'medium') return avgPrice >= 1000 && avgPrice <= 5000;
-                    if (priceFilter === 'expensive') return avgPrice > 5000;
-                } else {
-                    if (priceFilter === 'cheap') return price <= 1000;
-                    if (priceFilter === 'medium') return price >= 1000 && price <= 5000;
-                    if (priceFilter === 'expensive') return price > 5000;
-                }
-
-                return true;
-            });
-            console.log('Resultados após filtro de preço:', results.length);
-        }
-
-        // Limitar a 50 resultados (aumentado de 20)
-        results = results.slice(0, 50);
-
-        console.log('Resultados encontrados:', results.length);
+            // Se ambas as APIs falharem, mostrar mensagem
+            console.log('Ambas as APIs falharam. Nenhum resultado encontrado.');
+            results = [];
         }
     }
     
