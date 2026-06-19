@@ -872,7 +872,39 @@ async function aiSearch() {
         
         // Ordenar por relevância (matchScore)
         results.sort((a, b) => b.matchScore - a.matchScore);
-        
+
+        // Aplicar filtro de preço na busca local
+        if (priceFilter !== 'all') {
+            results = results.filter(product => {
+                const priceStr = product.price;
+                const priceMatch = priceStr.match(/R\$\s*([\d.,]+)/);
+                if (!priceMatch) return true; // Se não conseguir extrair preço, inclui
+
+                const price = parseFloat(priceMatch[1].replace(/\./g, '').replace(',', '.'));
+                const priceRange = priceStr.match(/R\$\s*([\d.,]+)\s*-\s*R\$\s*([\d.,]+)/);
+
+                if (priceRange) {
+                    const minPrice = parseFloat(priceRange[1].replace(/\./g, '').replace(',', '.'));
+                    const maxPrice = parseFloat(priceRange[2].replace(/\./g, '').replace(',', '.'));
+                    const avgPrice = (minPrice + maxPrice) / 2;
+
+                    if (priceFilter === 'cheap') return avgPrice <= 1000;
+                    if (priceFilter === 'medium') return avgPrice >= 1000 && avgPrice <= 5000;
+                    if (priceFilter === 'expensive') return avgPrice > 5000;
+                } else {
+                    if (priceFilter === 'cheap') return price <= 1000;
+                    if (priceFilter === 'medium') return price >= 1000 && price <= 5000;
+                    if (priceFilter === 'expensive') return price > 5000;
+                }
+
+                return true;
+            });
+            console.log('Resultados após filtro de preço:', results.length);
+        }
+
+        // Limitar a 20 resultados (aumentado de 3)
+        results = results.slice(0, 20);
+
         console.log('Resultados encontrados:', results.length);
     }
     
