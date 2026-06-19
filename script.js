@@ -3,14 +3,14 @@ const DEEPSEEK_API_KEY = 'sk-934213f8c61d4e5bb781640ddf9675fd'; // Substitua pel
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Configuração do Firebase
-const firebaseConfig = { 
-  apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
-  authDomain: "ia-compare.firebaseapp.com",
-  projectId: "ia-compare",
-  storageBucket: "ia-compare.firebasestorage.app",
-  messagingSenderId: "1017161644505",
-  appId: "1:1017161644505:web:9919c93a75d2706f3041c8",
-  measurementId: "G-N39NTG1JKZ"
+const firebaseConfig = {
+    apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
+    authDomain: "ia-compare.firebaseapp.com",
+    projectId: "ia-compare",
+    storageBucket: "ia-compare.firebasestorage.app",
+    messagingSenderId: "1017161644505",
+    appId: "1:1017161644505:web:9919c93a75d2706f3041c8",
+    measurementId: "G-N39NTG1JKZ"
 };
 
 // Inicializar Firebase
