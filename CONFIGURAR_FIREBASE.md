@@ -86,6 +86,8 @@ service cloud.firestore {
 
 4. Clique em "Publicar"
 
+**IMPORTANTE:** Se você estiver testando localmente ou o Firebase não estiver configurado, o app funcionará normalmente com login desabilitado. As funções de login só funcionarão após configurar o Firebase corretamente.
+
 ## Passo 8: Testar
 
 1. Faça upload dos arquivos atualizados no GitHub

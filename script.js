@@ -4,12 +4,12 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 // Configuração do Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
-    authDomain: "AIzaSyCBnJNCy5ZSwytghpCjSVJz_tXCWrcJgZI",
-    projectId: "ia-compare",
-    storageBucket: "ia-compare.firebasestorage.app",
-    messagingSenderId: "1017161644505",
-    appId: "1:1017161644505:web:9919c93a75d2706f3041c8"
+    apiKey: "SUA_API_KEY_DO_FIREBASE",
+    authDomain: "seu-projeto.firebaseapp.com",
+    projectId: "seu-projeto",
+    storageBucket: "seu-projeto.appspot.com",
+    messagingSenderId: "seu-sender-id",
+    appId: "seu-app-id"
 };
 
 // Inicializar Firebase
@@ -845,6 +845,8 @@ function openLoginModal() {
 function closeLoginModal() {
     document.getElementById('loginModal').style.display = 'none';
     document.getElementById('authError').style.display = 'none';
+    document.getElementById('authLoading').style.display = 'none';
+    document.getElementById('authSuccess').style.display = 'none';
 }
 
 function toggleAuthMode() {
@@ -875,13 +877,28 @@ async function handleLogin() {
             return;
         }
 
+        // Mostrar loading
+        document.getElementById('authLoading').style.display = 'block';
+        document.getElementById('authError').style.display = 'none';
+
         const auth = firebase.auth();
         await auth.signInWithEmailAndPassword(email, password);
         
-        closeLoginModal();
-        updateLoginButton();
-        alert('Login realizado com sucesso!');
+        // Buscar plano do usuário
+        const plan = await getUserPlan();
+        
+        // Esconder loading e mostrar sucesso
+        document.getElementById('authLoading').style.display = 'none';
+        document.getElementById('authSuccess').style.display = 'block';
+        document.getElementById('authSuccessMessage').textContent = `Login realizado com sucesso! Plano: ${plan === 'pro' ? 'Pro' : 'Free'}`;
+        
+        // Fechar modal após 2 segundos
+        setTimeout(() => {
+            closeLoginModal();
+            updateLoginButton();
+        }, 2000);
     } catch (error) {
+        document.getElementById('authLoading').style.display = 'none';
         showAuthError('Erro ao fazer login: ' + error.message);
     }
 }
@@ -907,6 +924,10 @@ async function handleRegister() {
             return;
         }
 
+        // Mostrar loading
+        document.getElementById('authLoading').style.display = 'block';
+        document.getElementById('authError').style.display = 'none';
+
         const auth = firebase.auth();
         const db = firebase.firestore();
 
@@ -921,10 +942,18 @@ async function handleRegister() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        closeLoginModal();
-        updateLoginButton();
-        alert('Cadastro realizado com sucesso! Plano: ' + plan);
+        // Esconder loading e mostrar sucesso
+        document.getElementById('authLoading').style.display = 'none';
+        document.getElementById('authSuccess').style.display = 'block';
+        document.getElementById('authSuccessMessage').textContent = `Cadastro realizado com sucesso! Plano: ${plan === 'pro' ? 'Pro' : 'Free'}`;
+        
+        // Fechar modal após 2 segundos
+        setTimeout(() => {
+            closeLoginModal();
+            updateLoginButton();
+        }, 2000);
     } catch (error) {
+        document.getElementById('authLoading').style.display = 'none';
         showAuthError('Erro ao fazer cadastro: ' + error.message);
     }
 }
@@ -949,9 +978,9 @@ async function handleLogout() {
         const auth = firebase.auth();
         await auth.signOut();
         updateLoginButton();
-        alert('Logout realizado com sucesso!');
+        // Logout realizado silenciosamente
     } catch (error) {
-        alert('Erro ao fazer logout: ' + error.message);
+        console.error('Erro ao fazer logout:', error);
     }
 }
 

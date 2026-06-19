@@ -212,6 +212,14 @@
                 <p style="margin-top: 1rem;">Já tem conta? <a href="#" onclick="toggleAuthMode()" style="color: #7aa2f7;">Entrar</a></p>
             </div>
             <div id="authError" style="color: #ff6b6b; margin-top: 1rem; display: none;"></div>
+            <div id="authLoading" style="display: none; text-align: center; margin-top: 1rem;">
+                <div class="spinner" style="width: 40px; height: 40px;"></div>
+                <p style="margin-top: 0.5rem;">Processando...</p>
+            </div>
+            <div id="authSuccess" style="display: none; text-align: center; margin-top: 1rem;">
+                <div style="font-size: 3rem;">✅</div>
+                <p style="color: #28a745; font-weight: 600; margin-top: 0.5rem;" id="authSuccessMessage"></p>
+            </div>
         </div>
     </div>
 
