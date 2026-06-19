@@ -35,6 +35,15 @@ nav {
     font-size: 1.8rem;
     font-weight: 800;
     color: #2d3436;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    color: #2d3436;
 }
 
 .nav-links {
@@ -88,6 +97,9 @@ nav {
 
 .theme-icon {
     display: block;
+    width: 24px;
+    height: 24px;
+    color: #2d3436;
 }
 
 .login-btn {
@@ -233,6 +245,32 @@ main {
     transform: translateY(-2px);
     background: #1e272e;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+    margin-right: 0.5rem;
+}
+
+.price-filter {
+    padding: 1.2rem 1.5rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2d3436;
+    transition: all 0.3s;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.price-filter:focus {
+    outline: none;
+    border-color: #2d3436;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
 }
 
 .loading {
@@ -733,6 +771,10 @@ body.dark-mode .logo {
     color: #e0e0e0;
 }
 
+body.dark-mode .logo-icon {
+    color: #e0e0e0;
+}
+
 body.dark-mode .nav-links a {
     color: #a0a0a0;
 }
@@ -753,6 +795,10 @@ body.dark-mode .theme-toggle {
 body.dark-mode .theme-toggle:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .theme-icon {
+    color: #e0e0e0;
 }
 
 body.dark-mode .hero {
@@ -1056,6 +1102,17 @@ body.dark-mode .login-submit {
 
 body.dark-mode .login-submit:hover {
     background: #6a92e7;
+}
+
+body.dark-mode .price-filter {
+    background: rgba(26, 26, 46, 0.8);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .price-filter:focus {
+    background: rgba(26, 26, 46, 1);
+    border-color: #7aa2f7;
 }
 
 @media (max-width: 768px) {
